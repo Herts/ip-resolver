@@ -19,7 +19,7 @@ func handleIp(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handleIp)
+	http.HandleFunc("/ipapi", handleIp)
 	log.Fatal(http.ListenAndServe(":1096", nil))
 
 }
