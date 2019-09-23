@@ -15,9 +15,7 @@ func handleIp(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(addrs)
 	w.Header().Set("Content-Type", "text/plain")
-	for _, addr := range addrs {
-		fmt.Fprint(w, addr)
-	}
+	fmt.Fprintf(w, "%s", addrs[0])
 }
 
 func main() {
