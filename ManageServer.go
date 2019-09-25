@@ -123,15 +123,18 @@ func (s *manageServer) SetDNS(ip string, country string) string {
 	log.Println(name)
 	if len(name) == 0 {
 		row := s.mysqlDb.QueryRow("SELECT MAX(region_idx) FROM t_server WHERE region = ?", country)
-		var index int
+		var index sql.NullInt32
 		err := row.Scan(&index)
 		if err != nil {
 			log.Println(err)
 		}
-		index++
+		var idx int32
+		if index.Valid {
+			idx = index.Int32 + 1
+		}
 		name = fmt.Sprint(country, index)
 		CFCreateDNS(name, ip, viper.GetString("cloudflare.zoneid"))
-		_, err = s.mysqlDb.Exec("INSERT INTO t_server (ip, name, region, region_idx) VALUES (?,?,?,?)", ip, name, country, index)
+		_, err = s.mysqlDb.Exec("INSERT INTO t_server (ip, name, region, region_idx) VALUES (?,?,?,?)", ip, name, country, idx)
 		if err != nil {
 			log.Println(err)
 		}
