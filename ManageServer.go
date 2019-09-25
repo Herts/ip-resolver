@@ -111,7 +111,7 @@ func (s *manageServer) handleDnsAdd() http.HandlerFunc {
 			return
 		}
 		name := s.SetDNS(ip, country)
-
+		name = strings.ToLower(name)
 		fmt.Fprint(w, name)
 	}
 }
