@@ -11,6 +11,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 )
 
 type manageServer struct {
@@ -73,9 +74,9 @@ func IpCountry(ip string) string {
 	if resp.StatusCode != 200 {
 		return ""
 	}
-
-	country, err := ioutil.ReadAll(resp.Body)
-	return string(country)
+	bytesCountry, err := ioutil.ReadAll(resp.Body)
+	country := strings.ReplaceAll(string(bytesCountry), "\n", "")
+	return country
 
 }
 
