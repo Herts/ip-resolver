@@ -1,0 +1,10 @@
+cloudflare:
+  apiKey: ""
+  apiemail: ""
+  zoneid: ""
+
+ipinfo:
+  apikey: ""
+
+database:
+  conn: ""
