@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/matryer/way"
@@ -140,4 +141,21 @@ func (s *manageServer) SetDNS(ip string, country string) string {
 		}
 	}
 	return name
+}
+
+func (s *manageServer) handleConfig() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId := way.Param(r.Context(), "userId")
+		configs := s.rayConfigs(userId)
+		links := ""
+		for _, config := range configs {
+			byteConfig, err := json.Marshal(config)
+			if err != nil {
+				log.Println(err)
+			}
+			link := fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString(byteConfig), "\n")
+			links += link
+		}
+		fmt.Fprint(w, base64.StdEncoding.EncodeToString([]byte(links)))
+	}
 }
