@@ -16,7 +16,7 @@ func (s *manageServer) routes() {
 
 func main() {
 	log.Println("Running")
-	viper.SetConfigName("config1")
+	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
 	err := viper.ReadInConfig()
 	if err != nil {
