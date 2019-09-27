@@ -35,7 +35,7 @@ func (s *manageServer) rayConfigs(userId string) []*rayConfig {
 			Add:  fmt.Sprint(serverName, ".thedanni.design"),
 			Port: "443",
 			ID:   userId,
-			Aid:  "64",
+			Aid:  "4",
 			Net:  "ws",
 			Type: "none",
 			Host: "",
