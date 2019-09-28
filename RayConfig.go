@@ -21,9 +21,9 @@ type rayConfig struct {
 }
 
 func (s *manageServer) rayConfigs(userId, email string) []*rayConfig {
-	stmt, err := s.mysqlDb.Prepare("SELECT server_name FROM v2ray.t_user_server WHERE userid = ?")
+	stmt, err := s.mysqlDb.Prepare("SELECT server_name FROM v_user_server WHERE userid = ?")
 	if len(userId) == 0 {
-		stmt, err = s.mysqlDb.Prepare("SELECT server_name FROM v2ray.t_user_server JOIN v2ray.t_user ON t_user.userid = t_user_server.userid WHERE useremail = ?")
+		stmt, err = s.mysqlDb.Prepare("SELECT server_name FROM v_user_server WHERE useremail = ?")
 	}
 	if err != nil {
 		log.Println(err)
