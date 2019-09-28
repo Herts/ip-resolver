@@ -21,9 +21,9 @@ type rayConfig struct {
 }
 
 func (s *manageServer) rayConfigs(userId, email string) []*rayConfig {
-	stmt, err := s.mysqlDb.Prepare("SELECT server_name FROM v_user_server WHERE userid = ?")
+	stmt, err := s.mysqlDb.Prepare("SELECT server_name, userid FROM v_user_server WHERE userid = ?")
 	if len(userId) == 0 {
-		stmt, err = s.mysqlDb.Prepare("SELECT server_name FROM v_user_server WHERE useremail = ?")
+		stmt, err = s.mysqlDb.Prepare("SELECT server_name, userid FROM v_user_server WHERE useremail = ?")
 	}
 	if err != nil {
 		log.Println(err)
@@ -40,14 +40,14 @@ func (s *manageServer) rayConfigs(userId, email string) []*rayConfig {
 		return configs
 	}
 	for rows.Next() {
-		var serverName string
-		rows.Scan(&serverName)
+		var serverName, id string
+		rows.Scan(&serverName, &id)
 		c := &rayConfig{
 			V:    "2",
 			Ps:   serverName,
 			Add:  fmt.Sprint(serverName, ".thedanni.design"),
 			Port: "443",
-			ID:   userId,
+			ID:   id,
 			Aid:  "4",
 			Net:  "ws",
 			Type: "none",
