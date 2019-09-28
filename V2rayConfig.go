@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 )
@@ -19,13 +20,25 @@ type rayConfig struct {
 	TLS  string `json:"tls"`
 }
 
-func (s *manageServer) rayConfigs(userId string) []*rayConfig {
-	rows, err := s.mysqlDb.Query("SELECT server_name FROM v2ray.t_user_server WHERE userid = ?", userId)
+func (s *manageServer) rayConfigs(userId, email string) []*rayConfig {
+	stmt, err := s.mysqlDb.Prepare("SELECT server_name FROM v2ray.t_user_server WHERE userid = ?")
+	if len(userId) == 0 {
+		stmt, err = s.mysqlDb.Prepare("SELECT server_name FROM v2ray.t_user_server JOIN v2ray.t_user ON t_user.userid = t_user_server.userid WHERE useremail = ?")
+	}
 	if err != nil {
 		log.Println(err)
-		return []*rayConfig{}
+	}
+	var rows *sql.Rows
+	if len(userId) == 0 {
+		rows, err = stmt.Query(email)
+	} else {
+		rows, err = stmt.Query(userId)
 	}
 	configs := []*rayConfig{}
+	if err != nil {
+		log.Println(err)
+		return configs
+	}
 	for rows.Next() {
 		var serverName string
 		rows.Scan(&serverName)

@@ -143,19 +143,33 @@ func (s *manageServer) SetDNS(ip string, country string) string {
 	return name
 }
 
-func (s *manageServer) handleConfig() http.HandlerFunc {
+func (s *manageServer) handleConfigByUUID() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId := way.Param(r.Context(), "userId")
-		configs := s.rayConfigs(userId)
-		links := ""
-		for _, config := range configs {
-			byteConfig, err := json.Marshal(config)
-			if err != nil {
-				log.Println(err)
-			}
-			link := fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString(byteConfig), "\n")
-			links += link
+		configs := s.rayConfigs(userId, "")
+		links := ConfigToLinks(configs)
+		fmt.Fprint(w, base64.StdEncoding.EncodeToString([]byte(links)))
+	}
+}
+
+func ConfigToLinks(configs []*rayConfig) string {
+	links := ""
+	for _, config := range configs {
+		byteConfig, err := json.Marshal(config)
+		if err != nil {
+			log.Println(err)
 		}
+		link := fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString(byteConfig), "\n")
+		links += link
+	}
+	return links
+}
+
+func (s *manageServer) handleConfigByEmail() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		email := way.Param(r.Context(), "email")
+		configs := s.rayConfigs("", email)
+		links := ConfigToLinks(configs)
 		fmt.Fprint(w, base64.StdEncoding.EncodeToString([]byte(links)))
 	}
 }

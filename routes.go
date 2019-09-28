@@ -11,7 +11,9 @@ import (
 func (s *manageServer) routes() {
 	s.router = way.NewRouter()
 	s.router.HandleFunc("GET", "/dns/add", s.handleDnsAdd())
-	s.router.HandleFunc("GET", "/dns/ray/:userId", s.handleConfig())
+	s.router.HandleFunc("GET", "/dns/ray/uid/:userId", s.handleConfigByUUID())
+	s.router.HandleFunc("GET", "/dns/ray/email/:email", s.handleConfigByEmail())
+
 }
 
 func main() {
