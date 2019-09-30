@@ -135,7 +135,7 @@ func (s *manageServer) SetDNS(ip string, country string) string {
 		}
 		name = fmt.Sprint(country, intIdx)
 		CFCreateDNS(name, ip, viper.GetString("cloudflare.zoneid"))
-		_, err = s.mysqlDb.Exec("INSERT INTO t_server (ip, name, region, region_idx) VALUES (?,?,?,?)", ip, name, country, intIdx)
+		_, err = s.mysqlDb.Exec("INSERT INTO t_server (ip, name, region, region_idx, level) VALUES (?,?,?,?,?)", ip, name, country, intIdx, 9)
 		if err != nil {
 			log.Println(err)
 		}
