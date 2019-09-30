@@ -113,7 +113,15 @@ func (s *manageServer) handleDnsAdd() http.HandlerFunc {
 		}
 		name := s.SetDNS(ip, country)
 		name = strings.ToLower(name)
+		s.relateAdminToServer(name)
 		fmt.Fprint(w, name)
+	}
+}
+
+func (s *manageServer) relateAdminToServer(name string) {
+	_, err := s.mysqlDb.Exec("INSERT INTO t_user_server (userid, server_name) VALUES (?,?)", viper.GetString("admin.id"), name)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
