@@ -79,9 +79,10 @@ func ConfigToLinks(configs []*rayConfig) string {
 
 func ConfigToQuantumult(configs []*rayConfig) string {
 	links := ""
-	templateURL := "%s = vmess, %s, 443, aes-128-cfb, \"%s\", group=%s, over-tls=true, certificate=1, obfs=ws\n"
+	templateURL := "%s = vmess, %s, 443, aes-128-cfb, \"%s\", group=%s, over-tls=true, certificate=1, obfs=ws"
 	for _, config := range configs {
-		links += fmt.Sprintf(templateURL, config.Ps, config.Add, config.ID, config.Group)
+		link := fmt.Sprintf(templateURL, config.Ps, config.Add, config.ID, config.Group)
+		links += fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString([]byte(link)), "\n")
 	}
 	return links
 }
