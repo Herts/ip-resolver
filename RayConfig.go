@@ -61,7 +61,7 @@ func (s *manageServer) rayConfigs(userId, email string) []*rayConfig {
 			Group: serverRegion,
 		}
 		if port.Valid {
-			c.Port = fmt.Sprint(port)
+			c.Port = fmt.Sprint(port.Int32)
 		}
 		configs = append(configs, c)
 	}
