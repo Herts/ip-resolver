@@ -1,0 +1,1 @@
+{{.Ps}} = vmess, {{.Add}}, {{.Port}}, chacha20-ietf-poly1305, "{{.ID}}", group={{.Group}}, over-tls=true, certificate=1, obfs=ws, obfs-header="Host: {{.Add}}[Rr][Nn]User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) Mobile/15D100"

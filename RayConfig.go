@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
+	"text/template"
 )
 
 type rayConfig struct {
@@ -83,10 +85,14 @@ func ConfigToLinks(configs []*rayConfig) string {
 
 func ConfigToQuantumult(configs []*rayConfig) string {
 	links := ""
-	templateURL := "%s = vmess, %s, 443, chacha20-ietf-poly1305, \"%s\", group=%s, over-tls=true, certificate=1, obfs=ws, obfs-header=\"Host: %s[Rr][Nn]User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) Mobile/15D100\""
+	t := template.Must(template.ParseFiles("resource/quantumult_ray_template.txt"))
 	for _, config := range configs {
-		link := fmt.Sprintf(templateURL, config.Ps, config.Add, config.ID, config.Group, config.Add)
-		links += fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString([]byte(link)), "\n")
+		var buf bytes.Buffer
+		err := t.Execute(&buf, config)
+		if err != nil {
+			log.Println(err)
+		}
+		links += fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString(buf.Bytes()), "\n")
 	}
 	return links
 }
