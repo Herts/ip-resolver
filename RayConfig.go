@@ -92,8 +92,8 @@ func ConfigToQuantumult(configs []*rayConfig) string {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println(buf.String())
-		links += fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString(buf.Bytes()))
+		//log.Println(buf.String())
+		links += fmt.Sprint("vmess://", base64.StdEncoding.EncodeToString(buf.Bytes()), "\n")
 	}
 	return links
 }
